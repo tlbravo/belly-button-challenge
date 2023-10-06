@@ -31,6 +31,7 @@ function init() {
         // console.log(Samples);
 
         // Initialize plots
+        init(Name);
         Metadata(Name);
         BarChart(Name);
         Bubblechart(Name);
@@ -127,8 +128,9 @@ function Bubblechart(selected_value) {
             y: firstFilteredSample.sample_values,
             text: firstFilteredSample.otu_labels,
             mode: "markers",
+            marker:{
                 color:firstFilteredSample.otu_ids,
-                size: firstFilteredSample.sample_values}];
+                size: firstFilteredSample.sample_values}}];
         let layout = {
             xaxis: {
                 title: "OTU ID"}};
@@ -136,7 +138,9 @@ function Bubblechart(selected_value) {
         });
 }
 // Create function that displays options
-function options (selected_value) {
+function optionChanged (selected_value) {
+
+    console.log(selected_value);
 
     //Display functions
     init(selected_value);

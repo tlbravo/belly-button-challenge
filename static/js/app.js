@@ -18,29 +18,35 @@ function init() {
     //Itterate through "names" in samples
         let Names = data.names;
     
-        Names.forEach((name) =>{
+        Names.forEach((id) =>{
+            
+            console.log(id);
+            
             // Add value of the dropdown meanu option to a variable 
-            dropdownMenu.append("option").text(name).property("value",name);
+            dropdownMenu.append("option").text(id).property("value",id);
         }); 
+        
         // first name in the list
-        let Samples = Names [0];
+        let Name = Names [0];
+        // console.log(Samples);
+
         // Initialize plots
-        Metadata(Samples);
-        BarChart(Samples);
-        Bubblechart(Samples);
+        Metadata(Name);
+        BarChart(Name);
+        Bubblechart(Name);
     }); 
 
   };
 //Itterate through metadata in samples
-function Metadata(samples) {
+function Metadata(selected_value) {
     // Retrieve JSON data and use console log
     d3.json(url).then((data) => {
 
         //Declare metadata variable
-        let metadatavar = data.metadatavar;
+        let metadatavar = data.metadata;
         // Filter metadata then log results
-        let filteredinfo = metadatavar.filter(result => result.id == samples);
-            console.log(filteredinfo)
+        let filteredinfo = metadatavar.filter(result => result.id == selected_value);
+        console.log(filteredinfo)
 
         //Retrive first value
         let value_info = filteredinfo[0];
@@ -49,23 +55,25 @@ function Metadata(samples) {
 
         //Add key value pair. https://www.geeksforgeeks.org/javascript-object-entries-method/
         // Append to metadata and log
-        Object.entries(value_info).forEach(([key,value])=> {d3.select("#sample-metadata").append("h5").text(`${key}:${value}`); });
-        console.log(entries);
+        Object.entries(value_info).forEach(([key,value])=> {
+            
+            console.log(key,value);
+            
+            d3.select("#sample-metadata").append("h5").text(`${key}:${value}`); });
     }); 
 
 }
 //Create a horizontal bar chart
-function BarChart(samples) {
+function BarChart(selected_value) {
    
     // Retrieve JSON data and use console log
     d3.json(url).then((data) => {
-        console.log(`Data: ${data}`);
         
         //Sample array
         let barsample = data.samples;
         
         //Filter sample array
-        let filteredSample = barsample.filter((Samples) => Samples.id == Samples);
+        let filteredSample = barsample.filter(result => result.id == selected_value);
        
         //First index 
         let firstFilteredSample = filteredSample[0];
@@ -81,30 +89,37 @@ function BarChart(samples) {
         //Display top 10 OTUs
         let trace1 = [{
             x: firstFilteredSample.sample_values.slice(0,10).reverse(),
-            y: firstFilteredSample.otu_ids.slice(0,10).map((out_ids) => `OTU ${otu_ids}`).reverse(),
+            y: firstFilteredSample.otu_ids.slice(0,10).map((otu_ids) => `OTU ${otu_ids}`).reverse(),
             text: firstFilteredSample.otu_labels.slice(0,10).reverse(),
             type: "bar",
             orientation: "h"        
         }];
 
         // Render the plot to the div tag with id "plot"
-        Plotly.BarPlot("plot",trace1);
-        });
-}
+        Plotly.newPlot("bar",trace1);
+    });
+};
 //Create a bubble chart 
-function Bubblechart(samples) {
+function Bubblechart(selected_value) {
     // Retrieve JSON data and use console log
     d3.json(url).then((data) => {
-        console.log(`Data: ${data}`);
        
         //Sample array
-        let Samples = data.Samples;
+        let Samples = data.samples;
         
         //Filter sample array
-        let filteredSample = Samples.filter((Samples) => Samples.id == samples);
+        let filteredSample = Samples.filter(result => result.id == selected_value);
        
         //First index 
         let firstFilteredSample = filteredSample[0];
+
+        //set ids, lables, values 
+        let otu_ids = firstFilteredSample.otu_ids;
+        let otu_labels = firstFilteredSample.otu_labels;
+        let sample_values = firstFilteredSample.sample_values;
+        
+        //Console log above 
+        console.log(otu_ids, otu_labels, sample_values);
         
         //Create trace for bubble chart
         let trace2 = [{
@@ -117,19 +132,17 @@ function Bubblechart(samples) {
         let layout = {
             xaxis: {
                 title: "OTU ID"}};
-        Plotly.BubblePlot("bubble",trace2, layout);
+        Plotly.newPlot("bubble",trace2, layout);
         });
 }
 // Create function that displays options
-function options (Samples) {
-    
-    console.log(Samples);    
+function options (selected_value) {
 
     //Display functions
-    init(Samples);
-    Metadata(Samples);
-    BarChart(Samples);
-    Bubblechart(Samples);
+    init(selected_value);
+    Metadata(selected_value);
+    BarChart(selected_value);
+    Bubblechart(selected_value);
 }
 
 init();

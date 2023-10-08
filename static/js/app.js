@@ -27,17 +27,19 @@ function init() {
         }); 
         
         // first name in the list
-        let Name = Names [0];
-        // console.log(Samples);
+        let initialName = Names [0];
+        updatePlots(initialName);
+    });
+}
 
-        // Initialize plots
-        init(Name);
-        Metadata(Name);
-        BarChart(Name);
-        Bubblechart(Name);
-    }); 
+// Initialize plots
+function updatePlots(selectedName) {
 
-  };
+    Metadata(selectedName);
+    BarChart(selectedName);
+    Bubblechart(selectedName);
+}
+
 //Itterate through metadata in samples
 function Metadata(selected_value) {
     // Retrieve JSON data and use console log
@@ -148,5 +150,4 @@ function optionChanged (selected_value) {
     BarChart(selected_value);
     Bubblechart(selected_value);
 }
-
 init();

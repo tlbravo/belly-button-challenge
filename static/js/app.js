@@ -48,7 +48,7 @@ function Metadata(selected_value) {
         //Declare metadata variable
         let metadatavar = data.metadata;
         // Filter metadata then log results
-        let filteredinfo = metadatavar.filter(result => result.id == selected_value);
+        let filteredinfo = metadatavar.filter(metadata => metadata.id == selected_value);
         console.log(filteredinfo)
 
         //Retrive first value
@@ -62,10 +62,11 @@ function Metadata(selected_value) {
             
             console.log(key,value);
             
-            d3.select("#sample-metadata").append("h5").text(`${key}:${value}`); });
+            d3.select("#sample-metadata").append("h5").text(`${key}:${value}`); 
+        });
     }); 
 
-}
+};
 //Create a horizontal bar chart
 function BarChart(selected_value) {
    

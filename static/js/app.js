@@ -5,41 +5,6 @@ const url = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/
 // const dataPromise = d3.jason(url)
 //     console.log("Data Promise" , dataPromise);
 
-// Initialize function for dropdown menu
-function init() {
-    
-    let dropdownMenu = d3.select("#selDataset");
-    
-    // Retrieve JSON data and use console log
-    d3.json(url).then((data) => {
-        
-        console.log(`Data: ${data}`);
-    
-    //Itterate through "names" in samples
-        let Names = data.names;
-    
-        Names.forEach((id) =>{
-            
-            console.log(id);
-            
-            // Add value of the dropdown meanu option to a variable 
-            dropdownMenu.append("option").text(id).property("value",id);
-        }); 
-        
-        // first name in the list
-        let initialName = Names [0];
-        updatePlots(initialName);
-    });
-}
-
-// Initialize plots
-function updatePlots(selectedName) {
-
-    Metadata(selectedName);
-    BarChart(selectedName);
-    Bubblechart(selectedName);
-}
-
 //Itterate through metadata in samples
 function Metadata(selected_value) {
     // Retrieve JSON data and use console log
@@ -140,15 +105,40 @@ function Bubblechart(selected_value) {
         Plotly.newPlot("bubble",trace2, layout);
         });
 }
-// Create function that displays options
-function optionChanged (selected_value) {
+// Create function that updates chart based on selected id
+function optionChange (value) {
 
-    console.log(selected_value);
+    console.log(value);
 
     //Display functions
-    init(selected_value);
-    Metadata(selected_value);
-    BarChart(selected_value);
-    Bubblechart(selected_value);
+    init(value);
+    Metadata(value);
+    BarChart(value);
+    Bubblechart(value);
 }
+
+// Initialize function for dropdown menu
+function init() {
+    
+    let dropdownMenu = d3.select("#selDataset");
+    
+    // Retrieve JSON data and use console log
+    d3.json(url).then((data) => {
+    
+    //Itterate through "names" in samples
+        let Names = data.names;
+    
+        Names.forEach((selected_value) =>{
+            
+            // Add value of the dropdown meanu option to a variable 
+            dropdownMenu.append("option").text(selected_value).property("value",selected_value);
+        }); 
+        
+        // first name in the list
+        let initialName = Names [0];
+        optionChange(initialName);
+    });
+}
+
+
 init();
